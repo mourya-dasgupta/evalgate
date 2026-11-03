@@ -19,7 +19,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 - [x] **M3 — Scorers**: registry + `exact_match`, `contains`, `not_contains`, `regex`,
       `json_valid`, `json_schema`, `numeric_tolerance`, `label_match`, `llm_judge`,
       custom dotted-path scorers.
-- [ ] **M4 — Runner + compare + gate + exit codes**: async runner with concurrency
+- [x] **M4 — Runner + compare + gate + exit codes**: async runner with concurrency
       limit, run storage, baseline, comparison/flip logic, gate rules, verdicts.
 - [ ] **M5 — Reports**: terminal (rich), Markdown (PR comment), HTML (self-contained),
       JSON.
