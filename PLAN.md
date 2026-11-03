@@ -25,7 +25,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
       JSON.
 - [x] **M6 — CLI polish + init**: all commands, global flags, `init` scaffolding,
       friendly error handling, exit codes 0/1/2/3.
-- [ ] **M7 — Demo project**: `examples/support-triage` (60+ golden cases, two prompt
+- [x] **M7 — Demo project**: `examples/support-triage` (60+ golden cases, two prompt
       versions, simulated model, cassettes, committed baseline), `make demo`,
       reports saved to `docs/assets/`.
 - [ ] **M8 — GitHub integration**: composite `action.yml`, example workflow, CI runs

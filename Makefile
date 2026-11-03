@@ -27,10 +27,10 @@ cov:  ## Run tests with coverage (fails under 90%)
 	$(PYTHON) -m pytest -q --cov=evalgate --cov-report=term-missing --cov-fail-under=90
 
 demo:  ## Run the support-triage demo story (v1 baseline -> v2 FAIL -> v1 PASS)
-	bash examples/support-triage/demo.sh
+	EVALGATE="$(PYTHON) -m evalgate" bash examples/support-triage/demo.sh
 
 demo-record:  ## Re-record the demo cassettes with the simulated model
-	cd examples/support-triage && bash record.sh
+	EVALGATE="$(PYTHON) -m evalgate" bash examples/support-triage/record.sh
 
 clean:  ## Remove build, cache and run artefacts
 	rm -rf build dist .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov coverage.xml

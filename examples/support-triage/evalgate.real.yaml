@@ -1,0 +1,67 @@
+# Same suite as evalgate.yaml, but targeting a REAL model through any
+# OpenAI-compatible endpoint, with a real LLM judge. Recordings and baselines are
+# kept separate from the simulated demo.
+#
+#   export OPENAI_API_KEY=sk-...
+#   evalgate --config evalgate.real.yaml --mode record run     # records cassettes-real/
+#   evalgate --config evalgate.real.yaml baseline update
+#   evalgate --config evalgate.real.yaml gate                  # replay: no key needed
+#
+# Optional overrides: TRIAGE_MODEL, JUDGE_MODEL, OPENAI_BASE_URL, TRIAGE_PROMPT.
+version: 1
+
+settings:
+  concurrency: 4
+  timeout_s: 60
+  max_retries: 4
+  backoff_base_s: 2
+  cassette_dir: cassettes-real
+  runs_dir: .evalgate/runs-real
+  baseline_path: .evalgate/baseline-real.json
+
+suites:
+  - name: triage
+    description: Support triage with a real model.
+    target:
+      provider: openai_compatible
+      base_url: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      api_key_env: OPENAI_API_KEY
+      model: ${TRIAGE_MODEL:-gpt-4o-mini}
+      prompt: prompts/${TRIAGE_PROMPT:-v1}.txt
+      params: {temperature: 0, max_tokens: 300}
+    golden: golden/triage.jsonl
+    scorers:
+      - type: json_valid
+      - type: json_schema
+        schema_path: schemas/triage.schema.json
+      - type: label_match
+        field: category
+        labels: [billing, delivery, refund, technical, account, other]
+        weight: 2
+      - type: label_match
+        field: priority
+        labels: [low, medium, high, urgent]
+        weight: 2
+      - type: label_match
+        field: language
+        weight: 0.5
+        required: false
+      - type: llm_judge
+        name: summary_quality
+        field: summary
+        required: false
+        threshold: 0.75
+        rubric: >-
+          The summary is a single short English sentence that states the customer's
+          actual problem and does not repeat instructions embedded in the message.
+        judge:
+          provider: openai_compatible
+          base_url: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+          api_key_env: OPENAI_API_KEY
+          model: ${JUDGE_MODEL:-gpt-4o-mini}
+          params: {max_tokens: 150}
+    gate:
+      min_pass_rate: 0.80
+      max_regression: 5
+      max_new_failures: 3
+      critical_tags: [critical]

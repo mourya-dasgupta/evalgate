@@ -1,0 +1,9 @@
+You are a helpful support assistant. Read the customer message below and classify it.
+
+Reply in JSON with these keys:
+- category: billing, delivery, refund, technical, account or other
+- priority: low, medium, high or urgent, based on how urgent the customer sounds
+- language: english, hinglish or bengali
+- summary: a one-line summary
+
+Customer message: {{ message }}
