@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, type-check, test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Lint
+        run: make lint
+      - name: Type-check
+        run: make typecheck
+      - name: Test with coverage (>= 90%)
+        run: python -m pytest -q --cov=evalgate --cov-report=term-missing --cov-report=xml --cov-fail-under=90
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+  example-gate:
+    name: Example gate (support-triage, replay)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate the example against its committed baseline
+        id: evalgate
+        uses: ./
+        with:
+          working-directory: examples/support-triage
+          report-name: support-triage-report
+      - name: Check verdict
+        env:
+          VERDICT: ${{ steps.evalgate.outputs.verdict }}
+        run: test "$VERDICT" = "PASS"
+
+  demo:
+    name: Demo story (v1 PASS, v2 FAIL)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install .
+      - run: make demo

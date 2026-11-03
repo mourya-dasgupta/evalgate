@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Support triage result",
+  "type": "object",
+  "required": ["category", "priority", "language", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "category": {"enum": ["billing", "delivery", "refund", "technical", "account", "other"]},
+    "priority": {"enum": ["low", "medium", "high", "urgent"]},
+    "language": {"enum": ["english", "hinglish", "bengali"]},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 200}
+  }
+}

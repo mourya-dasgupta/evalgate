@@ -1,0 +1,11 @@
+.git
+.venv
+**/__pycache__
+**/.evalgate
+.pytest_cache
+.mypy_cache
+.ruff_cache
+docs
+examples
+tests
+htmlcov

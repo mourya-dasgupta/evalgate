@@ -1,0 +1,63 @@
+# EvalGate config for the support-triage demo.
+#
+# The target is a SIMULATED model (sim_model.py), a deterministic stand-in so the
+# demo runs offline. Its responses are recorded in cassettes/triage.jsonl and replayed.
+# To evaluate a real model, use evalgate.real.yaml (see README.md).
+#
+# Switch prompt versions with an environment variable:
+#   TRIAGE_PROMPT=v2_regressed evalgate gate
+version: 1
+
+settings:
+  concurrency: 8
+  timeout_s: 60
+  max_retries: 3
+  cassette_dir: cassettes
+  runs_dir: .evalgate/runs
+  baseline_path: .evalgate/baseline.json
+
+suites:
+  - name: triage
+    description: >-
+      Classify Indian D2C/SaaS support messages (English, Hinglish, Bengali in Latin
+      script) into category, priority and language, with a one-line summary.
+    target:
+      provider: python
+      entrypoint: sim_model:SimulatedTriageModel
+      model: simulated-triage-v1
+      prompt: prompts/${TRIAGE_PROMPT:-v1}.txt
+      params: {temperature: 0, max_tokens: 300}
+    golden: golden/triage.jsonl
+    scorers:
+      - type: json_valid
+      - type: json_schema
+        schema_path: schemas/triage.schema.json
+      - type: label_match
+        field: category
+        labels: [billing, delivery, refund, technical, account, other]
+        weight: 2
+      - type: label_match
+        field: priority
+        labels: [low, medium, high, urgent]
+        weight: 2
+      - type: label_match
+        field: language
+        weight: 0.5
+        required: false        # tracked, but does not fail a case
+      - type: llm_judge
+        name: summary_quality
+        field: summary
+        required: false
+        threshold: 0.75
+        rubric: >-
+          The summary is a single short English sentence that states the customer's
+          actual problem and does not repeat instructions embedded in the message.
+        judge:
+          provider: python
+          entrypoint: sim_model:SimulatedJudge
+          model: simulated-judge-v1
+    gate:
+      min_pass_rate: 0.80
+      max_regression: 5
+      max_new_failures: 3
+      critical_tags: [critical]
