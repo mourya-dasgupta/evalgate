@@ -16,7 +16,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 - [x] **M2 — Providers + cassette layer**: `Provider` interface, `mock`,
       `openai_compatible`, `anthropic`, `python` (dotted-path) providers; retries with
       exponential backoff, timeouts; cassette record/replay/live with request hashing.
-- [ ] **M3 — Scorers**: registry + `exact_match`, `contains`, `not_contains`, `regex`,
+- [x] **M3 — Scorers**: registry + `exact_match`, `contains`, `not_contains`, `regex`,
       `json_valid`, `json_schema`, `numeric_tolerance`, `label_match`, `llm_judge`,
       custom dotted-path scorers.
 - [ ] **M4 — Runner + compare + gate + exit codes**: async runner with concurrency
