@@ -18,8 +18,8 @@ coverage.xml
 htmlcov/
 
 # EvalGate run artefacts (baselines are committed on purpose)
-.evalgate/runs/
-.evalgate/runs-*/
+**/.evalgate/runs/
+**/.evalgate/runs-*/
 evalgate-report.*
 
 # Editors / OS
