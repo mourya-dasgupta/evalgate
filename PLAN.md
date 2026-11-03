@@ -21,7 +21,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
       custom dotted-path scorers.
 - [x] **M4 — Runner + compare + gate + exit codes**: async runner with concurrency
       limit, run storage, baseline, comparison/flip logic, gate rules, verdicts.
-- [ ] **M5 — Reports**: terminal (rich), Markdown (PR comment), HTML (self-contained),
+- [x] **M5 — Reports**: terminal (rich), Markdown (PR comment), HTML (self-contained),
       JSON.
 - [ ] **M6 — CLI polish + init**: all commands, global flags, `init` scaffolding,
       friendly error handling, exit codes 0/1/2/3.

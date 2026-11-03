@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EvalGate report · {{ verdict_label[gate.verdict] }}</title>
+<style>
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1f; --muted: #6b6b70; --line: #e3e3e0;
+  --pass: #1a7f37; --pass-bg: #e6f4ea; --fail: #c62828; --fail-bg: #fdecea;
+  --warn: #9a6700; --warn-bg: #fff4d6; --accent: #3b5bdb; --code: #f1f1ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131315; --panel: #1c1c1f; --text: #ececee; --muted: #9c9ca3; --line: #2e2e33;
+    --pass: #4ac26b; --pass-bg: #12301c; --fail: #ff6b6b; --fail-bg: #3a1717;
+    --warn: #e3b341; --warn-bg: #352a0d; --accent: #8ca2ff; --code: #26262b;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+h2 { font-size: 20px; margin: 32px 0 12px; }
+h3 { font-size: 16px; margin: 20px 0 8px; }
+.muted { color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; overflow-x: auto; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 600; font-size: 13px; }
+.PASS { color: var(--pass); background: var(--pass-bg); }
+.FAIL { color: var(--fail); background: var(--fail-bg); }
+.NO_BASELINE { color: var(--warn); background: var(--warn-bg); }
+.big { font-size: 18px; padding: 4px 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.neg { color: var(--fail); } .pos { color: var(--pass); }
+.rule-pass::before { content: "✓ "; color: var(--pass); }
+.rule-fail::before { content: "✗ "; color: var(--fail); }
+.rule-skipped::before { content: "– "; color: var(--muted); }
+.warn { color: var(--warn); }
+pre { background: var(--code); padding: 10px; border-radius: 6px; white-space: pre-wrap; word-break: break-word; margin: 4px 0 10px; font-size: 13px; }
+details.case { border-bottom: 1px solid var(--line); padding: 6px 0; }
+details.case summary { cursor: pointer; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+details.case[open] summary { margin-bottom: 8px; }
+.tag { font-size: 12px; padding: 1px 7px; border-radius: 6px; background: var(--code); color: var(--muted); }
+.flip { font-size: 12px; padding: 1px 7px; border-radius: 6px; background: var(--fail-bg); color: var(--fail); font-weight: 600; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+.filters button { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 6px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+.filters button.active { border-color: var(--accent); color: var(--accent); }
+.cm td { text-align: center; min-width: 44px; }
+.cm th.rowh { text-align: right; }
+footer { margin-top: 40px; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+<h1>EvalGate report <span class="badge big {{ gate.verdict }}">{{ verdict_label[gate.verdict] }}</span></h1>
+<div class="muted">Run <code>{{ run.run_id }}</code> · {{ run.created_at }} · mode <code>{{ run.mode }}</code> ·
+{% if gate.baseline_run_id %}baseline <code>{{ gate.baseline_run_id }}</code>{% else %}no baseline{% endif %}</div>
+
+<div class="panel">
+<table>
+<thead><tr><th>Suite</th><th class="num">Cases</th><th class="num">Pass rate</th><th class="num">Δ vs baseline</th><th class="num">Score</th><th class="num">Flips</th><th>Verdict</th></tr></thead>
+<tbody>
+{% for s in suites %}{% set sv = s.verdict %}
+<tr>
+<td><a href="#suite-{{ sv.suite }}">{{ sv.suite }}</a></td>
+<td class="num">{{ sv.metrics.total }}</td>
+<td class="num">{{ sv.metrics.pass_rate | pct }}</td>
+<td class="num {% if sv.comparison.delta_pp is not none and sv.comparison.delta_pp < 0 %}neg{% elif sv.comparison.delta_pp %}pos{% endif %}">{{ sv.comparison.delta_pp | delta }}</td>
+<td class="num">{{ "%.3f" | format(sv.metrics.score) }}</td>
+<td class="num">{% if sv.comparison.has_baseline %}{{ sv.comparison.new_failures | length }}{% else %}—{% endif %}</td>
+<td><span class="badge {{ sv.verdict }}">{{ verdict_label[sv.verdict] }}</span></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% for s in suites %}{% set sv = s.verdict %}{% set r = s.result %}
+<section id="suite-{{ sv.suite }}">
+<h2>{{ sv.suite }} <span class="badge {{ sv.verdict }}">{{ verdict_label[sv.verdict] }}</span></h2>
+{% if r.description %}<p class="muted">{{ r.description }}</p>{% endif %}
+<p class="muted">Target <code>{{ r.target.provider }}</code> / <code>{{ r.target.model }}</code> · prompt <code>{{ r.target.prompt }}</code> · golden set <code>{{ r.golden }}</code>{% if r.cache_hits %} · {{ r.cache_hits }} cassette hits{% endif %}</p>
+
+<div class="grid">
+<div class="panel">
+<h3>Gate rules</h3>
+{% if sv.rules %}<ul>{% for rule in sv.rules %}<li class="rule-{{ rule.status }}"><code>{{ rule.rule }}</code>: {{ rule.message }}</li>{% endfor %}</ul>{% else %}<p class="muted">No rules configured.</p>{% endif %}
+{% for w in sv.warnings %}<p class="warn">⚠ {{ w }}</p>{% endfor %}
+</div>
+<div class="panel">
+<h3>Summary</h3>
+<table>
+<tr><td>Passed</td><td class="num">{{ r.metrics.passed }} / {{ r.metrics.total }}</td></tr>
+<tr><td>Errored</td><td class="num">{{ r.metrics.errored }}</td></tr>
+<tr><td>Baseline pass rate</td><td class="num">{{ sv.comparison.baseline_pass_rate | pct }}</td></tr>
+<tr><td>Flipped to failing</td><td class="num">{{ sv.comparison.new_failures | length }}</td></tr>
+<tr><td>Fixed since baseline</td><td class="num">{{ sv.comparison.fixed | length }}</td></tr>
+</table>
+</div>
+</div>
+
+{% if sv.comparison.tags %}
+<div class="panel">
+<h3>Pass rate by tag</h3>
+<table>
+<thead><tr><th>Tag</th><th class="num">Cases</th><th class="num">Pass rate</th><th class="num">Baseline</th><th class="num">Δ</th></tr></thead>
+<tbody>
+{% for tag, d in sv.comparison.tags.items() %}
+<tr><td><span class="tag">{{ tag }}</span></td><td class="num">{{ d.total }}</td><td class="num">{{ d.pass_rate | pct }}</td><td class="num">{{ d.baseline_pass_rate | pct }}</td><td class="num {% if d.delta_pp is not none and d.delta_pp < 0 %}neg{% elif d.delta_pp %}pos{% endif %}">{{ d.delta_pp | delta }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endif %}
+
+{% for cm in r.confusion %}
+<div class="panel">
+<h3>Confusion matrix · <code>{{ cm.scorer }}</code> <span class="muted">(accuracy {{ cm.accuracy() | pct }}; rows = expected, columns = predicted)</span></h3>
+<table class="cm">
+<thead><tr><th></th>{% for label in cm.labels %}<th>{{ label }}</th>{% endfor %}</tr></thead>
+<tbody>
+{% for exp in cm.labels %}{% set row_total = cm.counts[exp].values() | sum %}
+<tr><th class="rowh">{{ exp }}</th>
+{% for pred in cm.labels %}{% set n = cm.counts[exp][pred] %}
+<td style="background: rgba({% if exp == pred %}26,127,55{% else %}198,40,40{% endif %},{{ heat(n, row_total) }})">{{ n if n else "·" }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endfor %}
+
+<div class="panel" data-suite="{{ sv.suite }}">
+<h3>Cases</h3>
+<div class="filters">
+<button class="active" data-filter="all">All ({{ r.cases | length }})</button>
+<button data-filter="failed">Failed ({{ r.metrics.failed }})</button>
+<button data-filter="flipped">Flipped ({{ s.flips | length }})</button>
+<button data-filter="passed">Passed ({{ r.metrics.passed }})</button>
+</div>
+{% for c in r.cases %}
+<details class="case" data-status="{{ 'passed' if c.passed else 'failed' }}" data-flipped="{{ 'yes' if c.id in s.flips else 'no' }}">
+<summary>
+<span class="badge {{ 'PASS' if c.passed else 'FAIL' }}">{{ 'pass' if c.passed else 'fail' }}</span>
+<code>{{ c.id }}</code>
+<span class="muted">score {{ "%.2f" | format(c.score) }}</span>
+{% if c.id in s.flips %}<span class="flip">flipped</span>{% endif %}
+{% for t in c.tags %}<span class="tag">{{ t }}</span>{% endfor %}
+</summary>
+{% if c.notes %}<p class="muted">{{ c.notes }}</p>{% endif %}
+<div class="grid">
+<div><strong>Input</strong><pre>{{ c.input | pretty }}</pre></div>
+<div><strong>Expected</strong><pre>{{ c.expected | pretty }}</pre></div>
+<div><strong>Actual</strong>{% if c.error %}<pre class="neg">{{ c.error }}</pre>{% else %}<pre>{{ c.output | pretty }}</pre>{% endif %}</div>
+</div>
+{% if c.scores %}
+<table>
+<thead><tr><th>Scorer</th><th class="num">Score</th><th class="num">Weight</th><th>Result</th><th>Reason</th></tr></thead>
+<tbody>
+{% for o in c.scores %}
+<tr><td><code>{{ o.name }}</code>{% if not o.required %} <span class="muted">(optional)</span>{% endif %}</td><td class="num">{{ "%.2f" | format(o.score) }}</td><td class="num">{{ o.weight }}</td><td class="{{ 'pos' if o.passed else 'neg' }}">{{ 'pass' if o.passed else 'fail' }}</td><td>{{ o.reason }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+</details>
+{% endfor %}
+</div>
+</section>
+{% endfor %}
+
+<footer class="muted">Generated by EvalGate {{ version }}. This file is self-contained and can be shared as-is.</footer>
+</main>
+<script>
+document.querySelectorAll("[data-suite]").forEach(function (panel) {
+  panel.querySelectorAll(".filters button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      panel.querySelectorAll(".filters button").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      var f = btn.getAttribute("data-filter");
+      panel.querySelectorAll("details.case").forEach(function (el) {
+        var show = f === "all" || (f === "flipped" ? el.dataset.flipped === "yes" : el.dataset.status === f);
+        el.style.display = show ? "" : "none";
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>
