@@ -13,7 +13,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 - [x] **M1 — Config + golden sets + validate**: Pydantic v2 config models, env-var
       interpolation, friendly validation errors with locations, JSONL golden sets
       with line-numbered errors, prompt template rendering.
-- [ ] **M2 — Providers + cassette layer**: `Provider` interface, `mock`,
+- [x] **M2 — Providers + cassette layer**: `Provider` interface, `mock`,
       `openai_compatible`, `anthropic`, `python` (dotted-path) providers; retries with
       exponential backoff, timeouts; cassette record/replay/live with request hashing.
 - [ ] **M3 — Scorers**: registry + `exact_match`, `contains`, `not_contains`, `regex`,
