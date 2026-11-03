@@ -1,5 +1,5 @@
 PYTHON ?= python
-SRC := src tests examples
+SRC := src tests examples scripts
 
 .PHONY: install lint format typecheck test cov demo demo-record clean help
 
@@ -28,6 +28,7 @@ cov:  ## Run tests with coverage (fails under 90%)
 
 demo:  ## Run the support-triage demo story (v1 baseline -> v2 FAIL -> v1 PASS)
 	EVALGATE="$(PYTHON) -m evalgate" bash examples/support-triage/demo.sh
+	$(PYTHON) scripts/sync_readme.py
 
 demo-record:  ## Re-record the demo cassettes with the simulated model
 	EVALGATE="$(PYTHON) -m evalgate" bash examples/support-triage/record.sh

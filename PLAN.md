@@ -30,7 +30,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
       reports saved to `docs/assets/`.
 - [x] **M8 — GitHub integration**: composite `action.yml`, example workflow, CI runs
       the example gate, Dockerfile.
-- [ ] **M9 — Docs**: README, guide, architecture, runbook, roadmap, portfolio, ADRs,
+- [x] **M9 — Docs**: README, guide, architecture, runbook, roadmap, portfolio, ADRs,
       issues-to-create, CHANGELOG, CONTRIBUTING.
 - [x] **M10 — Final verification**: clean install, lint/typecheck/tests/coverage,
       `make demo`, run every documented command, numbers cross-checked, PR opened.
