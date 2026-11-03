@@ -23,7 +23,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
       limit, run storage, baseline, comparison/flip logic, gate rules, verdicts.
 - [x] **M5 — Reports**: terminal (rich), Markdown (PR comment), HTML (self-contained),
       JSON.
-- [ ] **M6 — CLI polish + init**: all commands, global flags, `init` scaffolding,
+- [x] **M6 — CLI polish + init**: all commands, global flags, `init` scaffolding,
       friendly error handling, exit codes 0/1/2/3.
 - [ ] **M7 — Demo project**: `examples/support-triage` (60+ golden cases, two prompt
       versions, simulated model, cassettes, committed baseline), `make demo`,
