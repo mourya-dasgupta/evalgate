@@ -149,7 +149,7 @@ errored cases are refused.
 ```bash
 evalgate baseline update
 evalgate baseline update --suite triage
-evalgate baseline update --run .evalgate/runs/2026-11-03T06-52-12-427491Z.json
+evalgate baseline update --run "$(ls .evalgate/runs/*.json | head -n 1)"   # the oldest saved run
 ```
 
 Commit the baseline file. Updating it in a PR makes "we accept this new level of quality"
@@ -171,7 +171,7 @@ Markdown (PR comment), a self-contained HTML file, or JSON. Writes to stdout or 
 ```bash
 evalgate report --format md
 evalgate report --format html --output report.html
-evalgate report --format json --run .evalgate/runs/2026-11-03T06-52-12-427491Z.json
+evalgate report --format json --run "$(ls .evalgate/runs/*.json | head -n 1)"
 ```
 
 ## Configuration reference

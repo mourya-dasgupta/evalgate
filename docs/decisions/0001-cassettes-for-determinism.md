@@ -17,7 +17,7 @@ mode exists for exploratory runs and always calls the provider.
 
 ## Consequences
 
-- CI is deterministic, fast (the 66-case demo replays in about a second) and needs no secrets.
+- CI is deterministic, fast (replaying the 66-case demo suite takes under a second) and needs no secrets.
 - A PR that changes a prompt *must* re-record, which makes the cost of a prompt change
   visible in review (the cassette diff shows exactly which answers changed).
 - The gate measures the recorded behaviour, not today's live behaviour. Provider-side

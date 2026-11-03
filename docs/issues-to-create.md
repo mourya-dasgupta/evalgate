@@ -1,11 +1,15 @@
 # Issues to create
 
 Ten issues drawn from the [roadmap](roadmap.md). Each has a title, context, acceptance
-criteria and labels.
+criteria and labels. All ten have been created on GitHub as
+[issues #1–#10](https://github.com/mourya-dasgupta/evalgate/issues); this file keeps the
+drafts alongside the code.
 
 ---
 
 ## 1. Gate on statistical significance for noisy evals
+
+**GitHub:** [#1](https://github.com/mourya-dasgupta/evalgate/issues/1)
 
 **Labels:** `enhancement`, `gate`, `roadmap:now`
 
@@ -24,6 +28,8 @@ either flaps or is too loose.
 
 ## 2. Track cost and latency per run, with gate rules
 
+**GitHub:** [#2](https://github.com/mourya-dasgupta/evalgate/issues/2)
+
 **Labels:** `enhancement`, `reports`, `gate`, `roadmap:now`
 
 **Context.** Providers return token usage; cassettes already store usage and latency. A
@@ -38,6 +44,8 @@ prompt change that doubles tokens is a regression even when accuracy holds.
 ---
 
 ## 3. First-class PR comment from the GitHub Action
+
+**GitHub:** [#3](https://github.com/mourya-dasgupta/evalgate/issues/3)
 
 **Labels:** `enhancement`, `github-action`, `roadmap:now`
 
@@ -54,6 +62,8 @@ Every user has to copy that block.
 
 ## 4. `evalgate cassette prune`
 
+**GitHub:** [#4](https://github.com/mourya-dasgupta/evalgate/issues/4)
+
 **Labels:** `enhancement`, `cli`, `cassettes`, `roadmap:now`
 
 **Context.** Record mode upserts by design (ADR 0012), so recordings for old prompt versions accumulate.
@@ -67,6 +77,8 @@ Every user has to copy that block.
 ---
 
 ## 5. Version golden sets and compare only shared cases
+
+**GitHub:** [#5](https://github.com/mourya-dasgupta/evalgate/issues/5)
 
 **Labels:** `enhancement`, `compare`, `roadmap:next`
 
@@ -83,6 +95,8 @@ EvalGate warns today but cannot correct for it.
 
 ## 6. RAG scorers: faithfulness and context recall
 
+**GitHub:** [#6](https://github.com/mourya-dasgupta/evalgate/issues/6)
+
 **Labels:** `enhancement`, `scorers`, `roadmap:next`
 
 **Context.** Retrieval pipelines fail by answering from outside the retrieved context, or by
@@ -97,6 +111,8 @@ not retrieving the needed passage.
 ---
 
 ## 7. Multi-turn and agent trajectory evals
+
+**GitHub:** [#7](https://github.com/mourya-dasgupta/evalgate/issues/7)
 
 **Labels:** `enhancement`, `golden-sets`, `scorers`, `roadmap:next`
 
@@ -113,6 +129,8 @@ arguments, loops.
 
 ## 8. pytest plugin mode
 
+**GitHub:** [#8](https://github.com/mourya-dasgupta/evalgate/issues/8)
+
 **Labels:** `enhancement`, `integration`, `roadmap:next`
 
 **Context.** Many teams already gate on pytest and would rather not add another CI step.
@@ -126,6 +144,8 @@ arguments, loops.
 
 ## 9. Static trend dashboard from committed results
 
+**GitHub:** [#9](https://github.com/mourya-dasgupta/evalgate/issues/9)
+
 **Labels:** `enhancement`, `reports`, `roadmap:later`
 
 **Context.** Quality should be visible to non-engineers over time, without adding a database.
@@ -138,6 +158,8 @@ arguments, loops.
 ---
 
 ## 10. MCP server so coding agents can run evals
+
+**GitHub:** [#10](https://github.com/mourya-dasgupta/evalgate/issues/10)
 
 **Labels:** `enhancement`, `integration`, `roadmap:later`
 

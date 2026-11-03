@@ -1,6 +1,6 @@
 ## EvalGate: ✅ PASS
 
-Run `2026-11-03T06-52-16-244737Z` vs baseline `2026-11-03T06-52-14-499094Z` · mode `replay`
+Run `2026-11-03T07-04-01-208821Z` vs baseline `2026-11-03T07-03-59-670128Z` · mode `replay`
 
 | Suite | Cases | Pass rate | Δ vs baseline | Score | Flips | Verdict |
 |---|---:|---:|---:|---:|---:|---|

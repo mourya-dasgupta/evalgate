@@ -45,3 +45,14 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 - GitHub Actions workflows cannot be executed here; they were checked for valid YAML and
   every shell step they run (`make lint/typecheck/demo`, `evalgate gate` with report flags)
   was run locally.
+
+## Final verification (M10) results
+
+- Fresh clone + `pip install -e ".[dev]"`: OK. Install from GitHub (`pip install git+https://...@branch`): OK.
+- `make lint`, `make typecheck`: pass. `make cov`: 172 tests pass, 99.63% coverage (floor 90%).
+- `make demo`: v1 baseline → v2 gate FAIL (exit 1) → v1 gate PASS, in about 2 seconds.
+- README quickstart, guide commands (offline ones), runbook rollback commands, and the guide's
+  custom-scorer examples were run as written.
+- Not verifiable here: real-model recording (no API keys by design), Docker build (no daemon),
+  GitHub Actions execution (runs on the PR).
+- Roadmap issues #1-#10 created on GitHub.

@@ -173,7 +173,7 @@ def _guarded(opts: Opts, fn: Callable[[], T]) -> T:
 
 def _execute_run(cfg: EvalGateConfig, suites: list[str] | None, opts: Opts) -> RunResult:
     selected = cfg.select_suites(suites)
-    if opts.mode != "replay":
+    if opts.mode != "replay" and any(s.target.provider != "mock" for s in selected):
         err.print(
             f"[yellow]Mode {opts.mode}:[/yellow] real provider calls will be made"
             + (" and cassettes updated." if opts.mode == "record" else ".")

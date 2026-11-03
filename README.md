@@ -19,7 +19,7 @@ The bundled example ([`examples/support-triage`](examples/support-triage)) triag
 ````markdown
 ## EvalGate: ❌ FAIL
 
-Run `2026-11-03T06-52-15-589098Z` vs baseline `2026-11-03T06-52-14-499094Z` · mode `replay`
+Run `2026-11-03T07-04-00-765460Z` vs baseline `2026-11-03T07-03-59-670128Z` · mode `replay`
 
 | Suite | Cases | Pass rate | Δ vs baseline | Score | Flips | Verdict |
 |---|---:|---:|---:|---:|---:|---|

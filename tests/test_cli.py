@@ -118,6 +118,9 @@ def test_run_and_suite_filter(project: Path) -> None:
     assert len(runs) == 1
     data = json.loads(runs[0].read_text("utf-8"))
     assert [s["name"] for s in data["suites"]] == ["echo"]
+    # mock providers never call a real API, so record mode does not warn about it
+    code, _, errout = invoke("--mode", "record", "run")
+    assert code == 0 and "real provider calls" not in errout
 
 
 def test_unknown_suite_exit_2(project: Path) -> None:

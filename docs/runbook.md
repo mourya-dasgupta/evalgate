@@ -78,8 +78,8 @@ fail. Replay mode never calls the provider and cannot be rate-limited.
 **Fix (preferred): restore from git.**
 
 ```bash
-git log --oneline -- .evalgate/baseline.json
-git checkout <good-commit> -- .evalgate/baseline.json
+git log --oneline -- .evalgate/baseline.json   # find the last good commit
+git checkout HEAD~1 -- .evalgate/baseline.json   # or use the hash from the log
 ```
 
 **Fix: rebuild it** from a known-good state of the prompt (for example `main`):
@@ -118,19 +118,19 @@ The baseline is a committed file, so rollback is a git operation:
 
 ```bash
 git log --oneline -- .evalgate/baseline.json        # find the last good version
-git checkout <commit> -- .evalgate/baseline.json
+git checkout HEAD~1 -- .evalgate/baseline.json      # or use the hash from the log
 evalgate baseline show                              # confirm what it contains
-git commit -m "eval: roll back baseline to <commit>"
+git commit -m "eval: roll back baseline"
 ```
 
 Or promote a specific saved run (runs live in `.evalgate/runs/`, newest last):
 
 ```bash
-ls .evalgate/runs/
-evalgate baseline update --run .evalgate/runs/<timestamp>.json
+ls .evalgate/runs/                                   # file names are UTC timestamps
+evalgate baseline update --run "$(ls .evalgate/runs/*.json | tail -n 2 | head -n 1)"   # the run before the latest
 ```
 
-To roll back a single suite and keep the others: `evalgate baseline update --run FILE --suite NAME`.
+To roll back a single suite and keep the others, add `--suite NAME` to the same command.
 
 ## Config or golden-set errors (exit 2)
 
