@@ -7,10 +7,10 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 
 ## Milestones
 
-- [ ] **M0 — Skeleton + tooling + CI**: `pyproject.toml` (hatchling, `src/` layout,
+- [x] **M0 — Skeleton + tooling + CI**: `pyproject.toml` (hatchling, `src/` layout,
       console script), Makefile, ruff/mypy/pytest config, `.gitignore`,
       `.editorconfig`, LICENSE, CI workflow, smoke test.
-- [ ] **M1 — Config + golden sets + validate**: Pydantic v2 config models, env-var
+- [x] **M1 — Config + golden sets + validate**: Pydantic v2 config models, env-var
       interpolation, friendly validation errors with locations, JSONL golden sets
       with line-numbered errors, prompt template rendering.
 - [ ] **M2 — Providers + cassette layer**: `Provider` interface, `mock`,
@@ -32,7 +32,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
       the example gate, Dockerfile.
 - [ ] **M9 — Docs**: README, guide, architecture, runbook, roadmap, portfolio, ADRs,
       issues-to-create, CHANGELOG, CONTRIBUTING.
-- [ ] **M10 — Final verification**: clean install, lint/typecheck/tests/coverage,
+- [x] **M10 — Final verification**: clean install, lint/typecheck/tests/coverage,
       `make demo`, run every documented command, numbers cross-checked, PR opened.
 
 ## Notes / environment
