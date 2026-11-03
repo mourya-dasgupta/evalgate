@@ -28,7 +28,7 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 - [x] **M7 — Demo project**: `examples/support-triage` (60+ golden cases, two prompt
       versions, simulated model, cassettes, committed baseline), `make demo`,
       reports saved to `docs/assets/`.
-- [ ] **M8 — GitHub integration**: composite `action.yml`, example workflow, CI runs
+- [x] **M8 — GitHub integration**: composite `action.yml`, example workflow, CI runs
       the example gate, Dockerfile.
 - [ ] **M9 — Docs**: README, guide, architecture, runbook, roadmap, portfolio, ADRs,
       issues-to-create, CHANGELOG, CONTRIBUTING.
@@ -39,3 +39,9 @@ and a conventional-commit push to `claude/gallant-wright-qi9oa1`.
 
 - Python 3.13 is available in the build container; the package targets 3.11+.
 - Package installs from PyPI work in this environment (no network workaround needed).
+- Docker CLI exists but no Docker daemon is available, so the image was not built here.
+  The Dockerfile's build stage was verified by building the wheel from exactly the files it
+  copies (pyproject.toml, README.md, LICENSE, src/).
+- GitHub Actions workflows cannot be executed here; they were checked for valid YAML and
+  every shell step they run (`make lint/typecheck/demo`, `evalgate gate` with report flags)
+  was run locally.

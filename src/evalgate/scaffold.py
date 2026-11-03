@@ -97,6 +97,9 @@ jobs:
 """
 
 
+EVALGATE_GITIGNORE = "# Run history stays local; baseline.json is committed.\nruns/\n"
+
+
 def golden_jsonl() -> str:
     lines = []
     for case_id, review, label, tags in CASES:
@@ -117,6 +120,7 @@ def scaffold_files() -> dict[str, str]:
         "prompts/sentiment.txt": PROMPT,
         "golden/sentiment.jsonl": golden_jsonl(),
         ".github/workflows/evalgate.yml": WORKFLOW,
+        ".evalgate/.gitignore": EVALGATE_GITIGNORE,
     }
 
 
